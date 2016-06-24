@@ -6,6 +6,7 @@ import asyncio, os, json, time
 from datetime import datetime
 
 from aiohttp import web
+import aiomysql
 
 
 #创建连接池
@@ -17,7 +18,7 @@ def create_pool(loop, **kw):
         host=kw.get('host','localhost'),
         port=kw.get('port',3306),
         user=kw['root'],
-        password=kw['root'],
+        password=kw[''],
         db=kw['db'],
         charset=kw.get('charset','utf8'),
         autocommit=kw.get('autocommit',True),
@@ -53,6 +54,12 @@ def execute(sql, args):
         except BaseException as e:
             raise
         return affected
+
+def create_args_string(num):
+    L = []
+    for n in range(num):
+        L.append('?')
+    return ','.join(L)
 
 #定义Model类的原类
 class ModelMetaclass(type):
